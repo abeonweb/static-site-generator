@@ -31,7 +31,7 @@ def extract_title(markdown):
             raise Exception("No title")
         return title
     
-def generate_page(from_path, template_path, dest_path):
+def generate_page(from_path, template_path, dest_path, basepath):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
     
     f= open(from_path)
@@ -43,7 +43,9 @@ def generate_page(from_path, template_path, dest_path):
     template= f2.read()
     template = template.replace("{{ Title }}", title)
     template = template.replace("{{ Content }}", content)
-    
+    template = template.replace('href="/', 'href="{basepath}')
+    template = template.replace('src="/', 'src="{basepath}')
+
     f.close()
     f2.close()
     # check if dir exist
@@ -51,7 +53,7 @@ def generate_page(from_path, template_path, dest_path):
         f.write(template)
 
 
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath):
     dir=listdir(dir_path_content)
     for item in dir:
         # create paths
@@ -61,11 +63,11 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
         # check if md file 
         if(path.isfile(path_to_file)):
             # generate page and return
-            generate_page(path_to_file, template_path, f"{dest_dir_path}/index.html")
+            generate_page(path_to_file, template_path, f"{dest_dir_path}/index.html", basepath)
 
         else: 
             # check and delete existing dir
             if path.exists(to_dest):
                 rmtree(to_dest)
             mkdir(to_dest)
-            generate_pages_recursive(path_to_file, template_path, to_dest)
+            generate_pages_recursive(path_to_file, template_path, to_dest, basepath)
