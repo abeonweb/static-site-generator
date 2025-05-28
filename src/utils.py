@@ -43,9 +43,9 @@ def generate_page(from_path, template_path, dest_path, basepath):
     template= f2.read()
     template = template.replace("{{ Title }}", title)
     template = template.replace("{{ Content }}", content)
-    template = template.replace('href="/', 'href="{basepath}')
-    template = template.replace('src="/', 'src="{basepath}')
-
+    template = template.replace('href="/', f'href="{basepath}')
+    template = template.replace('src="/', f'src="{basepath}')
+    print(template)
     f.close()
     f2.close()
     # check if dir exist
